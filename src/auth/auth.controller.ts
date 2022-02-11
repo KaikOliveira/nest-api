@@ -1,6 +1,14 @@
-import { BadRequestException, Body, Controller, Post } from '@nestjs/common';
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Get,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 import { parse } from 'date-fns';
 import { UserService } from 'src/user/user.service';
+import { AuthGuard } from './auth.guard';
 import { AuthService } from './auth.service';
 
 @Controller('auth')
@@ -55,5 +63,11 @@ export class AuthController {
   @Post('login')
   async login(@Body('email') email, @Body('password') password) {
     return await this.authService.login({ email, password });
+  }
+
+  @UseGuards(AuthGuard)
+  @Get('me')
+  async me() {
+    return true;
   }
 }
