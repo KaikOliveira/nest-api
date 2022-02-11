@@ -83,7 +83,7 @@ export class User1644283358530 implements MigrationInterface {
             name: 'photo',
             type: 'varchar',
             length: '255',
-            isNullable: false,
+            isNullable: true,
           },
           {
             name: 'personId',
@@ -103,7 +103,6 @@ export class User1644283358530 implements MigrationInterface {
         ],
       }),
     );
-
     await queryRunner.createForeignKey(
       'users',
       new TableForeignKey({
@@ -118,9 +117,7 @@ export class User1644283358530 implements MigrationInterface {
 
   public async down(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.dropForeignKey('users', 'FK_users_persons');
-
     await queryRunner.dropTable('users');
-
     await queryRunner.dropTable('persons');
   }
 }
