@@ -5,11 +5,13 @@ export const User = createParamDecorator(
     const request = ctx.switchToHttp().getRequest();
 
     if (field) {
+
       if (request.user[field]) {
         return request.user[field];
       } else {
         return null;
       }
+
     } else {
       return request.user;
     }
