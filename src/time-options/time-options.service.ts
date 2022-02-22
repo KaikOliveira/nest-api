@@ -4,6 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class TimeOptionsService {
@@ -46,18 +47,20 @@ export class TimeOptionsService {
     id = Number(id);
     if (isNaN(id)) throw new BadRequestException('ID is required');
 
-    if (!data.day) throw new BadRequestException('Day is required');
+    const dataTimeOptions = {} as Prisma.TimeOptionUpdateInput;
 
-    if (!data.time) throw new BadRequestException('Time is required');
+    if (data.day) {
+      data.day = Number(data.day);
+      dataTimeOptions.day = data.day;
+    }
 
-    data.day = Number(data.day);
-    data.time = new Date(data.time);
+    if (data.time) {
+      data.time = new Date(data.time);
+      dataTimeOptions.day = data.day;
+    }
 
     return await this.prisma.timeOption.update({
-      data: {
-        day: data.day,
-        time: data.time,
-      },
+      data: dataTimeOptions,
       where: {
         id,
       },
@@ -67,6 +70,10 @@ export class TimeOptionsService {
   async delete(id: number) {
     id = Number(id);
     if (isNaN(id)) throw new BadRequestException('ID is required');
+
+    const timeOption = await this.get(id);
+
+    if (!timeOption) throw new NotFoundException('Not found time option');
 
     return await this.prisma.timeOption.delete({
       where: {
