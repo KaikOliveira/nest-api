@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+} from '@nestjs/common';
 import { TimeOptionsService } from './time-options.service';
 
 @Controller('time-options')
@@ -20,12 +28,12 @@ export class TimeOptionsController {
     return this.timeOptionsService.create(data);
   }
 
-  @Get(':id')
+  @Put(':id')
   async update(@Param('id') id: number, @Body() data) {
     return this.timeOptionsService.update(id, data);
   }
 
-  @Get(':id')
+  @Delete(':id')
   async delete(@Param('id') id: number) {
     return this.timeOptionsService.delete(id);
   }
