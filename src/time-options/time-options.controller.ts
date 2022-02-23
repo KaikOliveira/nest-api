@@ -7,6 +7,8 @@ import {
   Post,
   Put,
 } from '@nestjs/common';
+import { CreateTimeOptionDTO } from './dto/create-time-options.dto';
+
 import { TimeOptionsService } from './time-options.service';
 
 @Controller('time-options')
@@ -24,13 +26,19 @@ export class TimeOptionsController {
   }
 
   @Post()
-  async create(@Body() data) {
+  async create(@Body() data: CreateTimeOptionDTO) {
     return this.timeOptionsService.create(data);
   }
 
   @Put(':id')
   async update(@Param('id') id: number, @Body() data) {
-    return this.timeOptionsService.update(id, data);
+    const { time, day } = data;
+    const dataTimeOption = {
+      id,
+      day,
+      time,
+    };
+    return this.timeOptionsService.update(dataTimeOption);
   }
 
   @Delete(':id')

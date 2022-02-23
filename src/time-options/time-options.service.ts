@@ -5,6 +5,8 @@ import {
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { Prisma } from '@prisma/client';
+import { CreateTimeOptionDTO } from './dto/create-time-options.dto';
+import { UpdateTimeOptionDTO } from './dto/update-time-options.dto';
 
 @Injectable()
 export class TimeOptionsService {
@@ -13,7 +15,8 @@ export class TimeOptionsService {
     return this.prisma.timeOption.findMany();
   }
 
-  async create({ day, time }: { day: number; time: Date }) {
+  async create(data: CreateTimeOptionDTO) {
+    let { day, time } = data;
     if (!day) throw new BadRequestException('Day is required');
 
     if (!time) throw new BadRequestException('Time is required');
@@ -43,9 +46,14 @@ export class TimeOptionsService {
     return timeOption;
   }
 
-  async update(id: number, data) {
+  async update(data: UpdateTimeOptionDTO) {
+    let { id } = data;
+
     id = Number(id);
-    if (isNaN(id)) throw new BadRequestException('ID is required');
+
+    if (isNaN(id)) {
+      throw new BadRequestException('Id must be a number');
+    }
 
     const dataTimeOptions = {} as Prisma.TimeOptionUpdateInput;
 
@@ -62,7 +70,7 @@ export class TimeOptionsService {
     return await this.prisma.timeOption.update({
       data: dataTimeOptions,
       where: {
-        id,
+        id: data.id,
       },
     });
   }
