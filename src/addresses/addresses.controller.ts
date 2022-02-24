@@ -6,9 +6,11 @@ import {
   Param,
   Delete,
   Put,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { AddressesService } from './addresses.service';
 import { CreateAddressDTO } from './dto/create-address.dto';
+
 import { UpdateAddressDto } from './dto/update-address.dto';
 
 @Controller('addresses')
@@ -21,7 +23,7 @@ export class AddressesController {
   }
 
   @Get(':id')
-  async get(@Param('id') id: string) {
+  async get(@Param('id', ParseIntPipe) id: number) {
     return this.addressesService.get(+id);
   }
 
@@ -32,14 +34,14 @@ export class AddressesController {
 
   @Put(':id')
   async update(
-    @Param('id') id: string,
-    @Body() updateAddressDto: UpdateAddressDto,
+    @Param('id', ParseIntPipe) id: number,
+    @Body() data: UpdateAddressDto,
   ) {
-    return this.addressesService.update(+id, updateAddressDto);
+    return this.addressesService.update(id, data);
   }
 
   @Delete(':id')
-  async remove(@Param('id') id: string) {
+  async remove(@Param('id', ParseIntPipe) id: number) {
     return this.addressesService.remove(+id);
   }
 }

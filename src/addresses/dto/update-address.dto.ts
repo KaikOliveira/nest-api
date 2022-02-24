@@ -3,6 +3,4 @@ import { CreateAddressDTO } from './create-address.dto';
 
 export class UpdateAddressDto extends PartialType(
   OmitType(CreateAddressDTO, [] as const),
-) {
-  id?: string;
-}
+) {}
